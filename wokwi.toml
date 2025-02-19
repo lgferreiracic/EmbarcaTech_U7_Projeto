@@ -1,0 +1,4 @@
+[wokwi]
+version = 1
+firmware = 'build/EmbarcaTech_U7_Projeto.uf2'
+elf = 'build/EmbarcaTech_U7_Projeto.elf'
