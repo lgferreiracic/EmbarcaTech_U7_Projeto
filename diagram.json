@@ -3,93 +3,297 @@
   "author": "Lucas Gabriel Ferreira",
   "editor": "wokwi",
   "parts": [
-    { "type": "board-pi-pico-w", "id": "pico", "top": -3.25, "left": 3.55, "attrs": {} },
+    {
+      "type": "board-pi-pico-w",
+      "id": "pico",
+      "top": -348.85,
+      "left": -82.85,
+      "attrs": { "builder": "pico-sdk" }
+    },
     {
       "type": "wokwi-pushbutton",
       "id": "btn1",
-      "top": -38.5,
-      "left": -140.5,
-      "rotate": 90,
+      "top": 50.4,
+      "left": -201.4,
+      "rotate": 180,
       "attrs": { "color": "black" }
     },
     {
       "type": "board-ssd1306",
       "id": "oled1",
-      "top": 233.54,
-      "left": -114.97,
+      "top": 185.54,
+      "left": 115.43,
       "attrs": { "i2cAddress": "0x3c" }
     },
-    { "type": "wokwi-vcc", "id": "vcc1", "top": 183.16, "left": -124.8, "attrs": {} },
     {
       "type": "wokwi-rgb-led",
       "id": "rgb1",
       "top": 71.2,
-      "left": -181.3,
+      "left": -56.5,
       "attrs": { "common": "cathode" }
     },
     {
       "type": "wokwi-analog-joystick",
       "id": "joystick1",
-      "top": -89.5,
-      "left": 177.1,
+      "top": 160.1,
+      "left": -235.7,
       "rotate": 90,
       "attrs": {}
     },
     {
       "type": "wokwi-resistor",
       "id": "r1",
-      "top": 119.15,
-      "left": -76.8,
+      "top": 166.6,
+      "left": -68.05,
+      "rotate": 270,
       "attrs": { "value": "330" }
     },
     {
       "type": "wokwi-pushbutton",
       "id": "btn2",
-      "top": -38.5,
-      "left": -92.5,
-      "rotate": 90,
+      "top": 54.2,
+      "left": 48,
       "attrs": { "color": "black" }
     },
     {
       "type": "wokwi-neopixel-matrix",
       "id": "neopixels1",
-      "top": -159.8,
-      "left": -35.06,
+      "top": -63.8,
+      "left": -102.26,
       "rotate": 180,
       "attrs": { "rows": "5", "cols": "5", "matrixLayout": "serpentine" }
     },
     {
       "type": "wokwi-buzzer",
       "id": "bz1",
-      "top": 40.8,
-      "left": 174.6,
+      "top": -45.6,
+      "left": 126.6,
       "attrs": { "volume": "0.1" }
-    }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz2",
+      "top": -45.6,
+      "left": -257.4,
+      "attrs": { "volume": "0.1" }
+    },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": 86.4, "left": -269.4, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd2", "top": 86.4, "left": 143.4, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc2", "top": 77.56, "left": 172.8, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd3", "top": 288, "left": -269.4, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc3", "top": 154.36, "left": -268.8, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd4", "top": -67.2, "left": 28.2, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": -124.04, "left": -38.4, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": -364.8,
+      "left": -67.2,
+      "attrs": { "text": "GPIO 6" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": -297.6,
+      "left": -288,
+      "attrs": { "text": "GPIO 5" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text3",
+      "top": -268.8,
+      "left": -288,
+      "attrs": { "text": "GPIO 7" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text4",
+      "top": -230.4,
+      "left": -288,
+      "attrs": { "text": "GPIO 10" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text5",
+      "top": -163.2,
+      "left": -288,
+      "attrs": { "text": "GPIO 13" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text6",
+      "top": -182.4,
+      "left": -288,
+      "attrs": { "text": "GPIO 12" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text7",
+      "top": -201.6,
+      "left": -288,
+      "attrs": { "text": "GPIO 11" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text8",
+      "top": -201.6,
+      "left": 38.4,
+      "attrs": { "text": "GPIO 21" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text9",
+      "top": -220.8,
+      "left": 38.4,
+      "attrs": { "text": "GPIO 22" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text10",
+      "top": -240,
+      "left": 38.4,
+      "attrs": { "text": "GPIO 26" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text11",
+      "top": -259.2,
+      "left": 38.4,
+      "attrs": { "text": "GPIO 27" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text12",
+      "top": -163.2,
+      "left": 38.4,
+      "attrs": { "text": "GPIO 14" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text13",
+      "top": -144,
+      "left": 38.4,
+      "attrs": { "text": "GPIO 15" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text14",
+      "top": -67.2,
+      "left": 134.4,
+      "attrs": { "text": "Buzzer " }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text15",
+      "top": -67.2,
+      "left": -249.6,
+      "attrs": { "text": "Buzzer " }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text16",
+      "top": 28.8,
+      "left": -192,
+      "attrs": { "text": "Botão A" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text17",
+      "top": 28.8,
+      "left": 48,
+      "attrs": { "text": "Botão B" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text18",
+      "top": -86.4,
+      "left": -115.2,
+      "attrs": { "text": "WS2818" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text19",
+      "top": 57.6,
+      "left": -67.2,
+      "attrs": { "text": "LED RGB" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text20",
+      "top": 144,
+      "left": -182.4,
+      "attrs": { "text": "Joystick" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text21",
+      "top": 268.8,
+      "left": 134.4,
+      "attrs": { "text": "SSD1306" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 109.55,
+      "left": 192,
+      "attrs": { "value": "5000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": 128.75,
+      "left": 182.4,
+      "attrs": { "value": "5000" }
+    },
+    { "type": "wokwi-logo", "id": "logo1", "top": -403.2, "left": -96, "attrs": {} }
   ],
   "connections": [
-    [ "pico:GP5", "btn1:2.r", "green", [ "h-124.8", "v-32.05", "h0.2" ] ],
-    [ "pico:GND.1", "btn1:1.r", "black", [ "h-67.2", "v0", "h-38.4" ] ],
-    [ "oled1:VCC", "vcc1:VCC", "red", [ "v0" ] ],
-    [ "oled1:GND", "pico:GND.4", "black", [ "v0" ] ],
-    [ "oled1:SCL", "pico:GP15", "green", [ "v0" ] ],
-    [ "oled1:SDA", "pico:GP14", "blue", [ "v0" ] ],
-    [ "pico:3V3", "joystick1:VCC", "magenta", [ "h48.31", "v-96" ] ],
-    [ "joystick1:GND", "pico:GND.5", "black", [ "h-9.6", "v182.36" ] ],
-    [ "joystick1:SEL", "pico:GP22", "gray", [ "h-19.2", "v134.4" ] ],
-    [ "joystick1:HORZ", "pico:GP26", "gold", [ "h-28.8", "v124.8" ] ],
-    [ "joystick1:VERT", "pico:GP27", "orange", [ "h-38.4", "v124.8" ] ],
-    [ "pico:GP11", "rgb1:G", "green", [ "h0" ] ],
-    [ "pico:GP12", "rgb1:B", "blue", [ "h0" ] ],
-    [ "pico:GP13", "rgb1:R", "red", [ "h0" ] ],
-    [ "r1:2", "pico:GND.3", "black", [ "v0" ] ],
-    [ "r1:1", "rgb1:COM", "black", [ "v0" ] ],
-    [ "btn2:2.r", "pico:GP6", "green", [ "v0" ] ],
-    [ "btn2:1.r", "pico:GND.1", "black", [ "v0" ] ],
-    [ "neopixels1:DIN", "pico:GP7", "green", [ "v-19.2", "h-153.6", "v278.4", "h57.6", "v19.2" ] ],
-    [ "neopixels1:VCC", "pico:VBUS", "red", [ "v-19.2", "h86.4", "v211.2" ] ],
-    [ "neopixels1:GND", "pico:GND.8", "black", [ "v-9.6", "h67.2", "v220.8" ] ],
-    [ "bz1:2", "pico:GP21", "green", [ "v0" ] ],
-    [ "bz1:1", "pico:GND.6", "green", [ "v0" ] ]
+    [ "pico:GP0", "$serialMonitor:RX", "", [] ],
+    [ "pico:GP1", "$serialMonitor:TX", "", [] ],
+    [ "rgb1:COM", "r1:2", "black", [ "v0" ] ],
+    [ "bz2:1", "gnd1:GND", "black", [ "v0" ] ],
+    [ "btn1:1.r", "gnd1:GND", "black", [ "v0" ] ],
+    [ "r1:1", "gnd3:GND", "black", [ "h0", "v105.6" ] ],
+    [ "btn2:1.r", "gnd2:GND", "black", [ "h38.6", "v19.2" ] ],
+    [ "bz1:1", "gnd2:GND", "black", [ "v0" ] ],
+    [ "vcc2:VCC", "oled1:VCC", "red", [ "v19.2", "h9.6" ] ],
+    [ "rgb1:R", "pico:GP13", "red", [ "v220.8", "h-240", "v-480", "h172.8", "v-38.44" ] ],
+    [ "rgb1:B", "pico:GP12", "blue", [ "v230.4", "h-276.8", "v-508.8", "h172.8", "v-28.84" ] ],
+    [ "rgb1:G", "pico:GP11", "green", [ "v240", "h-277.1", "v-537.6", "h172.8", "v-19.2" ] ],
+    [ "bz2:2", "pico:GP10", "#8f4814", [ "v96", "h-96.4", "v-355.2" ] ],
+    [ "neopixels1:DIN", "pico:GP7", "orange", [ "v-48", "h-278.4", "v-134.4" ] ],
+    [ "btn1:2.r", "pico:GP5", "violet", [ "h-9.8", "v76.6", "h-134.4", "v-422.4" ] ],
+    [ "btn2:2.r", "pico:GP6", "gray", [ "h9.8", "v-9.4", "h144", "v-422.4", "h-364.8", "v86.4" ] ],
+    [ "oled1:SCL", "pico:GP15", "blue", [ "v-38.4", "h67.5", "v-278.4", "h-336", "v-28.84" ] ],
+    [ "oled1:SDA", "pico:GP14", "green", [ "v-28.8", "h67.27", "v-307.2", "h-355.2", "v-19.24" ] ],
+    [ "bz1:2", "pico:GP21", "white", [ "v9.6", "h95.6", "v-230.4", "h-259.2", "v-28.8" ] ],
+    [
+      "joystick1:SEL",
+      "pico:GP22",
+      "purple",
+      [ "h-76.8", "v134.4", "h595.2", "v-566.4", "h-268.8", "v-28.8" ]
+    ],
+    [
+      "joystick1:HORZ",
+      "pico:GP26",
+      "magenta",
+      [ "h-86.4", "v153.6", "h614.4", "v-595.2", "h-268.8", "v-28.8" ]
+    ],
+    [
+      "joystick1:VERT",
+      "pico:GP27",
+      "limegreen",
+      [ "h-96", "v172.8", "h633.6", "v-624", "h-268.8", "v-19.2" ]
+    ],
+    [ "joystick1:VCC", "vcc3:VCC", "red", [ "h0" ] ],
+    [ "neopixels1:GND", "gnd4:GND", "black", [ "v-9.6", "h67.2" ] ],
+    [ "vcc1:VCC", "neopixels1:VCC", "red", [ "v9.6", "h-9.6" ] ],
+    [ "joystick1:GND", "gnd3:GND", "black", [ "h0" ] ],
+    [ "oled1:GND", "gnd2:GND", "black", [ "v-9.6", "h-19.2", "v-96" ] ],
+    [ "r2:1", "vcc2:VCC", "red", [ "h-9.6", "v-9.6" ] ],
+    [ "r3:1", "vcc2:VCC", "red", [ "h-19.2", "v-9.6", "h19.2" ] ],
+    [ "pico:GP15", "r3:2", "blue", [ "h-19.2", "v28.84", "h336", "v259.2" ] ],
+    [ "pico:GP14", "r2:2", "green", [ "h-28.8", "v19.24", "h355.2", "v259.2" ] ]
   ],
   "dependencies": {}
 }
