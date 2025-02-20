@@ -154,8 +154,7 @@ void ssd1306_vline(ssd1306_t *ssd, uint8_t x, uint8_t y0, uint8_t y1, bool value
 }
 
 // Função para desenhar um caractere
-void ssd1306_draw_char(ssd1306_t *ssd, char c, uint8_t x, uint8_t y)
-{
+void ssd1306_draw_char(ssd1306_t *ssd, char c, uint8_t x, uint8_t y){
   uint16_t index = (c - ' ') * 8;
   char ver=c;
   

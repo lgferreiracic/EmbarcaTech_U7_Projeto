@@ -35,7 +35,13 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(EmbarcaTech_U7_Projeto EmbarcaTech_U7_Projeto.c inc/ssd1306.c)
+add_executable(EmbarcaTech_U7_Projeto EmbarcaTech_U7_Projeto.c 
+    include/button.c
+    include/buzzer.c
+    include/joystick.c
+    include/led_rgb.c
+    include/ssd1306.c
+    include/matrix.c)
 
 pico_set_program_name(EmbarcaTech_U7_Projeto "EmbarcaTech_U7_Projeto")
 pico_set_program_version(EmbarcaTech_U7_Projeto "0.1")
