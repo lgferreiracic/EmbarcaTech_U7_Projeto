@@ -37,10 +37,9 @@
     "raspberry-pi-pico.cmakePath": "${HOME}/.pico-sdk/cmake/v3.29.9/bin/cmake",
     "raspberry-pi-pico.ninjaPath": "${HOME}/.pico-sdk/ninja/v1.12.1/ninja",
     "files.associations": {
-        "stdio.h": "c",
-        "stdlib.h": "c",
-        "buzzer.h": "c",
+        "joystick.h": "c",
+        "led_rgb.h": "c",
         "matrix.h": "c",
-        "ws2812.pio.h": "c"
+        "ssd1306.h": "c"
     }
 }

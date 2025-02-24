@@ -1,12 +1,13 @@
 #include "led_rgb.h"
 
-void led_rgb_init(uint led_red_pin, uint led_green_pin, uint led_blue_pin){
-    gpio_init(led_red_pin);
-    gpio_set_dir(led_red_pin, GPIO_OUT);
+void led_init(uint led_pin){
+    gpio_init(led_pin);
+    gpio_set_dir(led_pin, GPIO_OUT);
+    gpio_put(led_pin, 0);
+}
 
-    gpio_init(led_green_pin);
-    gpio_set_dir(led_green_pin, GPIO_OUT);
-    
-    gpio_init(led_blue_pin);
-    gpio_set_dir(led_blue_pin, GPIO_OUT);
+void led_init_all(){
+    led_init(LED_RED_PIN);
+    led_init(LED_GREEN_PIN);
+    led_init(LED_BLUE_PIN);
 }

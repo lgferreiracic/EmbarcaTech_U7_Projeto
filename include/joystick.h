@@ -1,12 +1,17 @@
 #ifndef JOYSTICK_H
 #define JOYSTICK_H
 
+#include "stdio.h"
 #include "pico/stdio.h"
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 
-void joystick_init(uint x_pin, uint y_pin);
-uint joystick_read_x(uint x_pin);
-uint joystick_read_y(uint y_pin);
+#define JOYSTICK_X_PIN 26
+#define JOYSTICK_Y_PIN 27
+
+void joystick_init();
+uint joystick_read_x();
+uint joystick_read_y();
+void reading_joystick();
 
 #endif

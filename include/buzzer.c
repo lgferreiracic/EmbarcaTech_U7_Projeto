@@ -1,20 +1,16 @@
 #include "buzzer.h"
 
-// Frequências das notas musicais (em Hz)
-enum NotasMusicais {
-    DO = 2640, // Dó
-    RE = 2970, // Ré
-    MI = 3300, // Mi
-    FA = 3520, // Fá
-    SOL = 3960, // Sol
-    LA = 4400, // Lá
-    SI = 4950  // Si
-};
-
+// Inicializa o buzzer no pino especificado
 void buzzer_init(uint gpio){
     gpio_init(gpio);
     gpio_set_dir(gpio, GPIO_OUT);
     gpio_put(gpio, 0);
+}
+
+// Inicializa todos os buzzers
+void buzzer_init_all(){
+    buzzer_init(BUZZER_A_PIN);
+    buzzer_init(BUZZER_B_PIN);
 }
 
 // Configura o PWM no pino do buzzer com uma frequência especificada
@@ -40,4 +36,18 @@ void play_buzzer(uint pin, uint frequency, uint duration_ms) {
     pwm_set_gpio_level(pin, 32768);           
     sleep_ms(duration_ms);                   
     pwm_set_gpio_level(pin, 0);              
+}
+
+// Função para tocar um som de negação
+void play_denied_sound(){
+    play_buzzer(BUZZER_A_PIN, MI, 100);
+    sleep_ms(50);
+    play_buzzer(BUZZER_A_PIN, MI, 100);
+}
+
+// Função para tocar um som de sucesso
+void play_success_sound(){
+    play_buzzer(BUZZER_A_PIN, SOL, 100);
+    sleep_ms(50);
+    play_buzzer(BUZZER_A_PIN, SOL, 100);
 }
