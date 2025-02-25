@@ -47,6 +47,7 @@
         "stdio.h": "c",
         "linkedlist.h": "c",
         "linked_list.h": "c",
-        "font.h": "c"
+        "font.h": "c",
+        "buzzer.h": "c"
     }
 }
