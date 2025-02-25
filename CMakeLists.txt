@@ -33,7 +33,7 @@ project(EmbarcaTech_U7_Projeto C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-file(GLOB LIBSOURCES "include/*.c")
+file(GLOB LIBSOURCES "src/*.c")
 
 # Add executable. Default name is the project name, version 0.1
 

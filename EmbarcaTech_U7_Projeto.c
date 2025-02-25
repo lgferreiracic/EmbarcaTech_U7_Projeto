@@ -436,16 +436,54 @@ void manual_mode_movimentation(){
     sleep_ms(200);
 }
 
+void automatic_mode_movimentation(Robot* path, int path_length) {
+    for (int i = 0; i < path_length; i++) {
+        // Atualiza o setor apenas se mudar
+        factory.sectors[sector][coordenates_to_index(factory.robot.position.x, factory.robot.position.y)] = 0;
+        factory.robot.position.x = path[i].position.x;
+        factory.robot.position.y = path[i].position.y;
+        factory.robot.sector = path[i].sector;
+        factory.sectors[factory.robot.sector][coordenates_to_index(factory.robot.position.x, factory.robot.position.y)] = 1;
+        sector = factory.robot.sector;
+        draw_factory();
+        if(i < path_length - 1){
+            sleep_ms(500);
+        }
+    }
+    play_success_sound();
+}
+
+void find_path(Robot goal){
+    Robot start = {factory.robot.sector, {factory.robot.position.x, factory.robot.position.y}};
+    Robot *came_from = NULL;
+    Robot *path = NULL;
+    int path_length = 0;
+
+    if (bfs(&factory, start, goal, &came_from)) {
+        printf("Caminho encontrado:\n");
+        reconstruct_path(came_from, start, goal, &path, &path_length);
+        automatic_mode_movimentation(path, path_length);
+    } else {
+        printf("Nenhum caminho encontrado.\n");
+    }
+}
+
 int main(){
     stdio_init_all();
-    button_init_all();
+    //button_init_all();
     buzzer_init_all();
-    led_init_all();
+    //led_init_all();
     matrix_init();
     joystick_init();
     matrix_init();
     display_init(&ssd);
+    sleep_ms(10000);
+    Robot goal = {8, {2, 2}};
+    find_path(goal);
     while (true) {
-        manual_mode_movimentation();
+        draw_factory();
+        manual_mode_movimentation();    
+        
     }
+    return 0;
 }

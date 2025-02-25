@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "./include/matrix.h"
 
 //Cores 
 const RGB RED = {1, 0, 0};

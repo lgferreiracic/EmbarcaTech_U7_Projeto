@@ -4,6 +4,8 @@
 #include "include/matrix.h"
 
 #define NUM_SECTORS 9
+#define COLS 5
+#define ROWS 5
 
 typedef struct {
     uint8_t x;
@@ -22,6 +24,14 @@ typedef struct {
     Robot robot;
 }Factory;
 
-extern Factory factory;
+typedef struct {
+    int from_sector, to_sector;
+    Position from_pos, to_pos;
+} SectorConnection;
+
+bool is_valid_position(int x, int y);
+bool bfs(Factory *factory, Robot start, Robot goal, Robot **came_from);
+void reconstruct_path(Robot *came_from, Robot start, Robot goal, Robot **path, int *path_length);
+
 
 #endif

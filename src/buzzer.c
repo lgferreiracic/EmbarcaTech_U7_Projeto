@@ -1,4 +1,4 @@
-#include "buzzer.h"
+#include "./include/buzzer.h"
 
 // Inicializa o buzzer no pino especificado
 void buzzer_init(uint gpio){
