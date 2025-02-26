@@ -6,13 +6,13 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
-#define BUTTON_A_PIN 5
-#define BUTTON_B_PIN 6
-#define JOYSTICK_BUTTON_PIN 22
+#define BUTTON_A_PIN 5 // Define o pino do botão A
+#define BUTTON_B_PIN 6 // Define o pino do botão B
+#define JOYSTICK_BUTTON_PIN 22 // Define o pino do botão do joystick
 
-void button_init(uint gpio);
-void button_init_all();
-bool debounce(volatile uint32_t *last_time);
-void irq_handler(uint gpio, uint32_t events);
+void button_init(uint gpio); // Inicializa o botão
+void button_init_all(); // Inicializa todos os botões
+bool debounce(volatile uint32_t *last_time); // Função para debouncing
+void irq_handler(uint gpio, uint32_t events); // Função para gerenciar a interrupção dos botões
 
 #endif

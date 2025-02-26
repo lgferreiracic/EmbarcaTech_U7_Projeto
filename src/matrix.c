@@ -10,8 +10,8 @@ const RGB MAGENTA = {1, 0, 1};
 const RGB WHITE = {1, 1, 1};
 const RGB BLACK = {0, 0, 0};
 
-PIO pio;
-uint sm;
+PIO pio; //Variável para armazenar a configuração da PIO
+uint sm; //Variável para armazenar o estado da máquina
 
 //rotina para inicialização da matrix de leds - ws2812b
 uint matrix_init() {
@@ -25,9 +25,9 @@ uint matrix_init() {
 //rotina para definição da intensidade de cores do led
 uint32_t matrix_rgb(double r, double g, double b){
   unsigned char R, G, B;
-  R = r * 55;
-  G = g * 55;
-  B = b * 55;
+  R = r * 255;
+  G = g * 255;
+  B = b * 255;
   return (G << 24) | (R << 16) | (B << 8);
 }
 
@@ -51,11 +51,13 @@ int getIndex(int x, int y) {
     }
 }
 
+// Função para obter as coordenadas do vetor a partir do índice.
 void getCoordinates(int index, int *x, int *y) {
     *x = (index % 5);
     *y = (index / 5);
 }
 
+// Função para converter as coordenadas para o índice do vetor.
 uint coordenates_to_index(int x, int y) {
     return x * 5 + y;
 }
@@ -70,6 +72,7 @@ void desenho_pio(RGB pixels[NUM_PIXELS], PIO pio, uint sm) {
     }
 }
 
+// Função para apagar a matriz de leds.
 void clear_matrix(){
     RGB pixels[NUM_PIXELS];
     for (int i = 0; i < NUM_PIXELS; i++) {

@@ -1,6 +1,7 @@
 #include "./include/factory.h"
 #include <stdlib.h>
 
+// Definição das conexões entre os setores
 SectorConnection connections[] = {
     {0, 1, {2, 4}, {2, 0}}, {1, 0, {2, 0}, {2, 4}}, // Conexão bidirecional entre 0 e 1
     {0, 3, {4, 2}, {0, 2}}, {3, 0, {0, 2}, {4, 2}}, // Conexão bidirecional entre 0 e 3
@@ -15,13 +16,14 @@ SectorConnection connections[] = {
     {6, 7, {2, 4}, {2, 0}}, {7, 6, {2, 0}, {2, 4}}, // Conexão bidirecional entre 6 e 7
     {7, 8, {2, 4}, {2, 0}}, {8, 7, {2, 0}, {2, 4}}, // Conexão bidirecional entre 7 e 8
 };
-int num_connections = sizeof(connections) / sizeof(connections[0]);
+int num_connections = sizeof(connections) / sizeof(connections[0]); // Número de conexões
 
-const int dx[4] = {0, 0, -1, 1};
-const int dy[4] = {-1, 1, 0, 0};
+const int dx[4] = {0, 0, -1, 1}; // Vetor de deslocamento em x
+const int dy[4] = {-1, 1, 0, 0}; // Vetor de deslocamento em y
 
-int atual_capacity = 0;
+int atual_capacity = 0; // Capacidade atual do robô
 
+// Função para desenhar a fábrica
 void draw_factory(Factory *factory, uint8_t *sector){
     RGB pixels[NUM_PIXELS];
         for (int i = 0; i < NUM_PIXELS; i++) {
@@ -34,12 +36,13 @@ void draw_factory(Factory *factory, uint8_t *sector){
             } else if(factory->sectors[*sector][i] == 3){
                 pixels[i] = GREEN;
             } else if(factory->sectors[*sector][i] == 4){
-                pixels[i] = YELLOW;
+                pixels[i] = MAGENTA;
             }
         }
         desenho_pio(pixels, pio0, 0);
 }
 
+// Função para verificar se o objetivo foi alcançado
 bool verify_objective(Robot objectives[], Factory *factory, uint8_t *sector, bool delivered[]){
     for(int i = 0; i < NUM_LOADS; i++){
         if(objectives[i].sector == factory->robot.sector && objectives[i].position.x == factory->robot.position.x && objectives[i].position.y == factory->robot.position.y && !delivered[i] && (atual_capacity < LOAD_CAPACITY)){
@@ -50,6 +53,7 @@ bool verify_objective(Robot objectives[], Factory *factory, uint8_t *sector, boo
     return false;
 }
 
+// Função mover o robô para cima
 void move_up(Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]){
     if(factory->sectors[*sector][coordenates_to_index(factory->robot.position.x - 1, factory->robot.position.y)] == 2){
         play_denied_sound();
@@ -66,6 +70,7 @@ void move_up(Factory *factory, uint8_t *sector, bool delivered[], Robot objectiv
     }
 }
 
+// Função mover o robô para baixo
 void move_down(Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]){
     if(factory->sectors[*sector][coordenates_to_index(factory->robot.position.x + 1, factory->robot.position.y)] == 2){
         play_denied_sound();
@@ -86,6 +91,7 @@ void move_down(Factory *factory, uint8_t *sector, bool delivered[], Robot object
     }
 }
 
+// Função mover o robô para a esquerda
 void move_left(Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]){
     if(factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y - 1)] == 2){
         draw_factory(factory, sector);
@@ -103,6 +109,7 @@ void move_left(Factory *factory, uint8_t *sector, bool delivered[], Robot object
     }
 }
 
+// Função mover o robô para a direita
 void move_right(Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]){
     if(factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y + 1)] == 2){
         play_denied_sound();
@@ -119,6 +126,7 @@ void move_right(Factory *factory, uint8_t *sector, bool delivered[], Robot objec
     }
 }
 
+// Função para mudar para o setor à direita
 void change_to_right_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.sector = *sector + 1;
@@ -128,6 +136,7 @@ void change_to_right_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
 }
 
+// Função para mudar para o setor à esquerda
 void change_to_left_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.sector = *sector - 1;
@@ -137,6 +146,7 @@ void change_to_left_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
 }
 
+// Função para mudar para o setor acima
 void change_to_up_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.sector = *sector - 3;
@@ -146,6 +156,7 @@ void change_to_up_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
 }
 
+// Função para mudar para o setor abaixo
 void change_to_down_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.sector = *sector + 3;
@@ -155,6 +166,7 @@ void change_to_down_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
 }
 
+// Função para movimentação no setor 0
 void movimentation_in_sector_0(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
@@ -178,6 +190,7 @@ void movimentation_in_sector_0(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
+// Função para movimentação no setor 1
 void movimentation_in_sector_1(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
@@ -204,6 +217,7 @@ void movimentation_in_sector_1(Factory *factory, uint8_t *sector, uint16_t joyst
     } 
 }
 
+// Função para movimentação no setor 2
 void movimentation_in_sector_2(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         move_right(factory, sector, delivered, objectives);
@@ -225,6 +239,7 @@ void movimentation_in_sector_2(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
+// Função para movimentação no setor 3
 void movimentation_in_sector_3(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
@@ -249,6 +264,7 @@ void movimentation_in_sector_3(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
+// Função para movimentação no setor 4
 void movimentation_in_sector_4(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
@@ -276,6 +292,7 @@ void movimentation_in_sector_4(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
+// Função para movimentação no setor 5
 void movimentation_in_sector_5(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         move_right(factory, sector, delivered, objectives);
@@ -300,6 +317,7 @@ void movimentation_in_sector_5(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
+// Função para movimentação no setor 6
 void movimentation_in_sector_6(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
@@ -321,6 +339,7 @@ void movimentation_in_sector_6(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
+// Função para movimentação no setor 7
 void movimentation_in_sector_7(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
@@ -345,6 +364,7 @@ void movimentation_in_sector_7(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
+// Função para movimentação no setor 8
 void movimentation_in_sector_8(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         move_right(factory, sector, delivered, objectives);
@@ -366,6 +386,7 @@ void movimentation_in_sector_8(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
+// Função contar o número de entregas faltantes
 int get_missing_deliverables(Factory *factory){
     int missing_deliverables = 0;
     for(int i = 0; i < NUM_SECTORS; i++){
@@ -378,6 +399,7 @@ int get_missing_deliverables(Factory *factory){
     return missing_deliverables;
 }
 
+// Função para movimentação manual
 void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, ssd1306_t *ssd, bool delivered[], Robot objectives[]){
     reading_joystick(&joystick_x, &joystick_y);
     draw_factory(factory, sector);
@@ -416,6 +438,7 @@ void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joyst
     sleep_ms(200);
 }
 
+// Função para movimentação automática
 void automatic_mode_movimentation(Robot* path, int path_length, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[], ssd1306_t *ssd){ 
     for (int i = 0; i < path_length; i++) {   
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
@@ -434,6 +457,7 @@ void automatic_mode_movimentation(Robot* path, int path_length, Factory *factory
     }
 }
 
+// Função para encontrar o caminho
 void find_path(Robot goal, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[], ssd1306_t *ssd) {
     Robot start = {factory->robot.sector, {factory->robot.position.x, factory->robot.position.y}};
     Robot *came_from = NULL;
@@ -448,10 +472,12 @@ void find_path(Robot goal, Factory *factory, uint8_t *sector, bool delivered[], 
     }
 }
 
+// Função verificar se a posição é válida
 bool is_valid_position(int x, int y) {
     return x >= 0 && x < COLS && y >= 0 && y < ROWS;
 }
 
+// Função que implementa a busca em largura
 bool bfs(Factory *factory, Robot start, Robot goal, Robot **came_from) {
     bool *visited = (bool *)calloc(NUM_SECTORS * COLS * ROWS, sizeof(bool));
     if (!visited) {
@@ -533,6 +559,7 @@ bool bfs(Factory *factory, Robot start, Robot goal, Robot **came_from) {
     return false;
 }
 
+// Função para reconstruir o caminho
 void reconstruct_path(Robot *came_from, Robot start, Robot goal, Robot **path, int *path_length) {
     *path_length = 0;
 
@@ -584,6 +611,7 @@ int manhattan_distance(Robot a, Robot b) {
     return distance;
 }
 
+// Função para randomizar os objetivos
 void randomize_objectives(Robot objectives[], Factory *factory) {
     srand(to_ms_since_boot(get_absolute_time()));
     // Posições permitidas para alocação dos objetivos
@@ -610,17 +638,20 @@ void randomize_objectives(Robot objectives[], Factory *factory) {
     }
 }
 
+// Função para mostrar o destino
 void show_destination(Factory *factory) {
     if(factory->sectors[7][22]!=1)
             factory->sectors[7][22]=4;
 }
 
+// Função para calcular as distâncias
 void calculate_distances(int distances[], Robot objectives[], Factory *factory) {
     for (int i = 0; i < NUM_LOADS; i++) {
         distances[i] = manhattan_distance(factory->robot, objectives[i]);
     }
 }
 
+// Função para ordenar os objetivos de acordo com a distância
 void insertion_sort(int arr[], int n, bool aux[], Robot objectives[]) {
     for (int i = 1; i < n; i++) {
         int key = arr[i];
@@ -641,15 +672,7 @@ void insertion_sort(int arr[], int n, bool aux[], Robot objectives[]) {
     }
 }
 
-    //Calcula a distância de cada objetivo para o robô
-    //Ordena os objetivos de acordo com a distância
-    //O robô se move para o objetivo mais próximo
-    //O robô tem a capacidade de carregar 3 objetivos
-    //Quando o robô se posiciona em um objetivo, ele é marcado como entregue em delivered[]
-    //Quando o robô chega na capacidade máxima, ele vai para a posição 22 do setor 7
-    //Chegando lá, o robô zera a capacidade e volta a procurar os objetivos mais próximos
-    //O robô repete o processo até entregar todos os objetivos
-
+// Função para verificar se todos os objetivos foram entregues
 bool verify_delivered(bool delivered[], int n) {
     for (int i = 0; i < n; i++) {
         if (!delivered[i]) {
@@ -659,6 +682,7 @@ bool verify_delivered(bool delivered[], int n) {
     return true;
 }
 
+// Função para mostrar os objetivos não entregues
 void show_delivarables(Factory *factory, uint8_t sector, bool delivered[], Robot objectives[]) {
     for (int i = 0; i < NUM_LOADS; i++) {
         if (!delivered[i] && factory->sectors[objectives[i].sector][objectives[i].position.x * COLS + objectives[i].position.y] != 1) {
@@ -666,7 +690,8 @@ void show_delivarables(Factory *factory, uint8_t sector, bool delivered[], Robot
         }
     }
 }
-    
+
+// Função que implementa o VRP Capacitado
 void solve_capacitated_vrp(Factory *factory, Robot objectives[], int distances[], bool delivered[], uint8_t *sector, ssd1306_t *ssd) {
     int carried_loads = 0;
     Robot destination = {7, {4, 2}}; 
@@ -698,6 +723,7 @@ void solve_capacitated_vrp(Factory *factory, Robot objectives[], int distances[]
     atual_capacity = 0;
 }
 
+// Função para resetar os objetivos entregues
 void reset_delivered(bool delivered[]) {
     for (int i = 0; i < NUM_LOADS; i++) {
         delivered[i] = false;

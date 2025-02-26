@@ -62,19 +62,19 @@ void play_success_sound(){
 
 // Função para tocar uma música de inicialização
 void play_delivery_sound() {
-    yellow();
+    magenta();
     play_buzzer(BUZZER_A_PIN, DO, 150);
     black();
     sleep_ms(50);
-    yellow();
+    magenta();
     play_buzzer(BUZZER_A_PIN, RE, 150);
     black();
     sleep_ms(50);
-    yellow();
+    magenta();
     play_buzzer(BUZZER_A_PIN, MI, 150);
     black();
     sleep_ms(50);
-    yellow();
+    magenta();
     play_buzzer(BUZZER_A_PIN, SOL, 200);
     black();
 }

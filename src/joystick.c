@@ -1,16 +1,19 @@
 #include "./include/joystick.h"
 
+// Função para inicialização do joystick
 void joystick_init(){
     adc_init();
     adc_gpio_init(JOYSTICK_X_PIN);
     adc_gpio_init(JOYSTICK_Y_PIN);
 }
 
+// Função para leitura do eixo x do joystick
 uint joystick_read_x(){
     adc_select_input(1);
     return adc_read();
 }
 
+// Função para leitura do eixo y do joystick
 uint joystick_read_y(){
     adc_select_input(0);
     return adc_read();

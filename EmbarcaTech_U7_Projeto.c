@@ -14,18 +14,19 @@
 #include "./include/matrix.h"
 #include "./include/factory.h"
 
-ssd1306_t ssd;
-volatile uint32_t last_time_button_a = 0;
-volatile uint32_t last_time_button_b = 0;
-volatile uint32_t last_time_joystick_button = 0;
-volatile int option_selected = 0;
-volatile int option = 1;
-uint16_t joystick_x, joystick_y;
-uint8_t sector = 0;
-Robot objectives[NUM_LOADS];
-int distances[NUM_LOADS];
-bool delivered[NUM_LOADS] = {false, false, false, false, false};
+ssd1306_t ssd; // Variável para o display OLED SSD1306
+volatile uint32_t last_time_button_a = 0; // Variável para debounce do botão A
+volatile uint32_t last_time_button_b = 0; // Variável para debounce do botão B
+volatile uint32_t last_time_joystick_button = 0; // Variável para debounce do botão do joystick
+volatile int option_selected = 0; // Variável para armazenar a opção selecionada
+volatile int option = 1; // Variável para armazenar a opção atual
+uint16_t joystick_x, joystick_y; // Variáveis para armazenar a leitura do joystick em relação aos eixos x e y
+uint8_t sector = 0; // Variável para armazenar o setor atual
+Robot objectives[NUM_LOADS]; // Vetor para armazenar os objetivos do robô
+int distances[NUM_LOADS]; // Vetor para armazenar as distâncias entre o robô e os objetivos
+bool delivered[NUM_LOADS] = {false, false, false, false, false}; // Vetor para armazenar se os objetivos foram entregues
 
+// Estrutura responsável por armazenar a fábrica e o robô
 Factory factory = {
     .sectors[0] = {
         2, 2, 2, 2, 2,
@@ -99,6 +100,7 @@ Factory factory = {
     }
 };
 
+// Função para gerenciar a interrupção dos botões
 void irq_handler(uint gpio, uint32_t events){
     if (gpio == BUTTON_A_PIN && debounce(&last_time_button_a)){
         clear_matrix();
@@ -129,7 +131,8 @@ void irq_handler(uint gpio, uint32_t events){
 }
 
 int main(){
-    stdio_init_all();
+    //Rotina de inicialização
+    stdio_init_all(); 
     buzzer_init_all();
     matrix_init();
     joystick_init();
@@ -137,24 +140,29 @@ int main(){
     led_init_all();
     button_init_all();
     display_init(&ssd);
+
+    //Configuração dos pinos de interrupção
     gpio_set_irq_enabled_with_callback(BUTTON_A_PIN, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
     gpio_set_irq_enabled_with_callback(BUTTON_B_PIN, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
     gpio_set_irq_enabled_with_callback(JOYSTICK_BUTTON_PIN, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
 
     while (true) {
-        reading_joystick(&joystick_x, &joystick_y);
-        if(joystick_y < 1000 && option_selected == 0){
+        reading_joystick(&joystick_x, &joystick_y); // Leitura do joystick
+
+        if(joystick_y < 1000 && option_selected == 0){ //Se o joystick for pressionado para baixo e nenhuma opção estiver selecionada
             option++;
             if(option > 3){
                 option = 1;
             }
         }
-        else if(joystick_y > 3000 && option_selected == 0){
+        else if(joystick_y > 3000 && option_selected == 0){ //Se o joystick for pressionado para cima e nenhuma opção estiver selecionada
             option--;
             if(option < 1){
                 option = 3;
             }
         }
+
+        //Seleção da opção
         switch(option){
             case 1:
                 option_1_selected(&ssd);
@@ -168,6 +176,8 @@ int main(){
             default:
                 break;
         }
+
+        //Seleção da opção selecionada
         switch(option_selected){
             case 1:
                 manual_mode_movimentation(&factory, &sector, joystick_x, joystick_y, &ssd, delivered, objectives);
