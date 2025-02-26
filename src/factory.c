@@ -20,6 +20,7 @@ int num_connections = sizeof(connections) / sizeof(connections[0]);
 const int dx[4] = {0, 0, -1, 1};
 const int dy[4] = {-1, 1, 0, 0};
 
+int atual_capacity = 0;
 
 void draw_factory(Factory *factory, uint8_t *sector){
     RGB pixels[NUM_PIXELS];
@@ -39,7 +40,17 @@ void draw_factory(Factory *factory, uint8_t *sector){
         desenho_pio(pixels, pio0, 0);
 }
 
-void move_up(Factory *factory, uint8_t *sector){
+bool verify_objective(Robot objectives[], Factory *factory, uint8_t *sector, bool delivered[]){
+    for(int i = 0; i < NUM_LOADS; i++){
+        if(objectives[i].sector == factory->robot.sector && objectives[i].position.x == factory->robot.position.x && objectives[i].position.y == factory->robot.position.y && !delivered[i] && (atual_capacity < LOAD_CAPACITY)){
+            delivered[i] = true;
+            return true;
+        }
+    }
+    return false;
+}
+
+void move_up(Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]){
     if(factory->sectors[*sector][coordenates_to_index(factory->robot.position.x - 1, factory->robot.position.y)] == 2){
         play_denied_sound();
     }
@@ -47,10 +58,15 @@ void move_up(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.position.x--;
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
+        draw_factory(factory, sector);
+        if(verify_objective(objectives, factory, sector, delivered)){
+            play_success_sound();
+            atual_capacity++;
+        }
     }
 }
 
-void move_down(Factory *factory, uint8_t *sector){
+void move_down(Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]){
     if(factory->sectors[*sector][coordenates_to_index(factory->robot.position.x + 1, factory->robot.position.y)] == 2){
         play_denied_sound();
     }
@@ -58,21 +74,36 @@ void move_down(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.position.x++;
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
+        draw_factory(factory, sector);
+        if(verify_objective(objectives, factory, sector, delivered)){
+            play_success_sound();
+            atual_capacity++;
+        } else if(factory->robot.position.x == 4 && factory->robot.position.y == 2 && *sector == 7 && atual_capacity > 0){
+            play_delivery_sound();
+            show_destination(factory);
+            atual_capacity = 0;
+        }
     }
 }
 
-void move_left(Factory *factory, uint8_t *sector){
+void move_left(Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]){
     if(factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y - 1)] == 2){
+        draw_factory(factory, sector);
         play_denied_sound();
     }
     else if(factory->robot.position.y > 0){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.position.y--;
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
+        draw_factory(factory, sector);
+        if(verify_objective(objectives, factory, sector, delivered)){
+            play_success_sound();
+            atual_capacity++;
+        }
     }
 }
 
-void move_right(Factory *factory, uint8_t *sector){
+void move_right(Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]){
     if(factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y + 1)] == 2){
         play_denied_sound();
     }
@@ -80,6 +111,11 @@ void move_right(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.position.y++;
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
+        draw_factory(factory, sector);
+        if(verify_objective(objectives, factory, sector, delivered)){
+            play_success_sound();
+            atual_capacity++;
+        }
     }
 }
 
@@ -119,214 +155,214 @@ void change_to_down_sector(Factory *factory, uint8_t *sector){
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 1;
 }
 
-void movimentation_in_sector_0(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_0(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
             change_to_right_sector(factory, sector);
         }
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
-        move_left(factory, sector);
+        move_left(factory, sector, delivered, objectives);
     }
     else if(joystick_y > 3000){
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
         if(factory->robot.position.x == 4 && factory->robot.position.y == 2){
             change_to_down_sector(factory, sector);
         }
         else if(factory->robot.position.x < 4){
-            move_down(factory, sector);
+            move_down(factory, sector, delivered, objectives);
         }
     }
 }
 
-void movimentation_in_sector_1(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_1(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
             change_to_right_sector(factory, sector);
         }
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 0){
             change_to_left_sector(factory, sector);
         }
         else if(factory->robot.position.y > 0){
-            move_left(factory, sector);
+            move_left(factory, sector, delivered, objectives);
         }
     }
     else if(joystick_y > 3000){
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
         if(factory->robot.position.x == 4 && factory->robot.position.y == 2){
             change_to_down_sector(factory, sector);
         }
-        move_down(factory, sector);
+        move_down(factory, sector, delivered, objectives);
     } 
 }
 
-void movimentation_in_sector_2(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_2(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 0){
             change_to_left_sector(factory, sector);
         }
-        move_left(factory, sector);
+        move_left(factory, sector, delivered, objectives);
     }
     else if(joystick_y > 3000){
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
         if(factory->robot.position.x == 4 && factory->robot.position.y == 2){
             change_to_down_sector(factory, sector);
         }
-        move_down(factory, sector);
+        move_down(factory, sector, delivered, objectives);
     }
 }
 
-void movimentation_in_sector_3(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_3(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
             change_to_right_sector(factory, sector);
         }
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
-        move_left(factory, sector);
+        move_left(factory, sector, delivered, objectives);
     }
     else if(joystick_y > 3000){
         if(factory->robot.position.x == 0 && factory->robot.position.y == 2){
             change_to_up_sector(factory, sector);
         }
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
         if(factory->robot.position.x == 4 && factory->robot.position.y == 2){
             change_to_down_sector(factory, sector);
         }
-        move_down(factory, sector);
+        move_down(factory, sector, delivered, objectives);
     }
 }
 
-void movimentation_in_sector_4(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_4(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
             change_to_right_sector(factory, sector);
         }
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 0){
             change_to_left_sector(factory, sector);
         }
-        move_left(factory, sector);
+        move_left(factory, sector, delivered, objectives);
     }
     else if(joystick_y > 3000){
         if(factory->robot.position.x == 0 && factory->robot.position.y == 2){
             change_to_up_sector(factory, sector);
         }
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
         if(factory->robot.position.x == 4 && factory->robot.position.y == 2){
             change_to_down_sector(factory, sector);
         }
-        move_down(factory, sector);
+        move_down(factory, sector, delivered, objectives);
     }
 }
 
-void movimentation_in_sector_5(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_5(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 0){
             change_to_left_sector(factory, sector);
         }
-        move_left(factory, sector);
+        move_left(factory, sector, delivered, objectives);
     }
     else if(joystick_y > 3000){
         if(factory->robot.position.x == 0 && factory->robot.position.y == 2){
             change_to_up_sector(factory, sector);
         }
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
         if(factory->robot.position.x == 4 && factory->robot.position.y == 2){
             change_to_down_sector(factory, sector);
         }
-        move_down(factory, sector);
+        move_down(factory, sector, delivered, objectives);
     }
 }
 
-void movimentation_in_sector_6(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_6(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
             change_to_right_sector(factory, sector);
         }
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
-        move_left(factory, sector);
+        move_left(factory, sector, delivered, objectives);
     }
     else if(joystick_y > 3000){
         if(factory->robot.position.x == 0 && factory->robot.position.y == 2){
             change_to_up_sector(factory, sector);
         }
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
-        move_down(factory, sector);
+        move_down(factory, sector, delivered, objectives);
     }
 }
 
-void movimentation_in_sector_7(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_7(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 4){
             change_to_right_sector(factory, sector);
         }
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 0){
             change_to_left_sector(factory, sector);
         }
-        move_left(factory, sector);
+        move_left(factory, sector, delivered, objectives);
     }
     else if(joystick_y > 3000){
         if(factory->robot.position.x == 0 && factory->robot.position.y == 2){
             change_to_up_sector(factory, sector);
         }
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
-        move_down(factory, sector);
+        move_down(factory, sector, delivered, objectives);
     }
 }
 
-void movimentation_in_sector_8(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+void movimentation_in_sector_8(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, bool delivered[], Robot objectives[]){
     if(joystick_x > 3000){
-        move_right(factory, sector);
+        move_right(factory, sector, delivered, objectives);
     }
     else if(joystick_x < 1000){
         if(factory->robot.position.x == 2 && factory->robot.position.y == 0){
             change_to_left_sector(factory, sector);
         }
-        move_left(factory, sector);
+        move_left(factory, sector, delivered, objectives);
     }
     else if(joystick_y > 3000){
         if(factory->robot.position.x == 0 && factory->robot.position.y == 2){
             change_to_up_sector(factory, sector);
         }
-        move_up(factory, sector);
+        move_up(factory, sector, delivered, objectives);
     }
     else if(joystick_y < 1000){
-        move_down(factory, sector);
+        move_down(factory, sector, delivered, objectives);
     }
 }
 
@@ -342,38 +378,39 @@ int get_missing_deliverables(Factory *factory){
     return missing_deliverables;
 }
 
-void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, ssd1306_t *ssd){
+void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, ssd1306_t *ssd, bool delivered[], Robot objectives[]){
     reading_joystick(&joystick_x, &joystick_y);
     draw_factory(factory, sector);
-    navigation_status(ssd, *sector, 2, get_missing_deliverables(factory));
-
+    navigation_status(ssd, *sector, atual_capacity, get_missing_deliverables(factory));
+    show_destination(factory);
+    show_delivarables(factory, *sector, delivered, objectives);
     switch (factory->robot.sector){
         case 0:
-            movimentation_in_sector_0(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_0(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
         case 1:
-            movimentation_in_sector_1(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_1(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
         case 2:
-            movimentation_in_sector_2(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_2(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
         case 3:
-            movimentation_in_sector_3(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_3(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
         case 4:
-            movimentation_in_sector_4(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_4(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
         case 5:
-            movimentation_in_sector_5(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_5(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
         case 6:
-            movimentation_in_sector_6(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_6(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
         case 7:
-            movimentation_in_sector_7(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_7(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
         case 8:
-            movimentation_in_sector_8(factory, sector, joystick_x, joystick_y);
+            movimentation_in_sector_8(factory, sector, joystick_x, joystick_y, delivered, objectives);
             break;
     }
     sleep_ms(200);
@@ -655,6 +692,13 @@ void solve_capacitated_vrp(Factory *factory, Robot objectives[], int distances[]
             break;
         }
     }
+}
+
+void reset_delivered(bool delivered[]) {
+    for (int i = 0; i < NUM_LOADS; i++) {
+        delivered[i] = false;
+    }
+    atual_capacity = 0;
 }
 
 
