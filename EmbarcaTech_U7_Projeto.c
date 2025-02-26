@@ -29,7 +29,7 @@ bool delivered[NUM_LOADS] = {false, false, false, false, false};
 Factory factory = {
     .sectors[0] = {
         2, 2, 2, 2, 2,
-        2, 0, 0, 0, 2,
+        2, 1, 0, 0, 2,
         2, 0, 0, 0, 0,
         2, 0, 0, 0, 2,
         2, 2, 0, 2, 2
@@ -80,7 +80,7 @@ Factory factory = {
         2, 2, 0, 2, 2,
         2, 0, 0, 0, 2,
         0, 0, 0, 0, 0,
-        2, 0, 1, 0, 2,
+        2, 0, 0, 0, 2,
         2, 2, 4, 2, 2
     },
     .sectors[8] = {
@@ -93,7 +93,7 @@ Factory factory = {
     .robot = {
         .position = {
             .x = 1,
-            .y = 3
+            .y = 1
         },
         .sector = 0
     }
@@ -117,6 +117,14 @@ void irq_handler(uint gpio, uint32_t events){
         option = option_selected;
         option_selected = 0;
         clear_matrix();
+        reset_delivered(delivered);
+        for(int i = 0; i < NUM_SECTORS; i++){
+            for(int j = 0; j < NUM_PIXELS; j++){
+                if(factory.sectors[i][j] == 3){
+                    factory.sectors[i][j] = 0;
+                }
+            }
+        }
     }
 }
 
@@ -132,8 +140,6 @@ int main(){
     gpio_set_irq_enabled_with_callback(BUTTON_A_PIN, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
     gpio_set_irq_enabled_with_callback(BUTTON_B_PIN, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
     gpio_set_irq_enabled_with_callback(JOYSTICK_BUTTON_PIN, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
-
-    start_display(&ssd);
 
     while (true) {
         reading_joystick(&joystick_x, &joystick_y);
@@ -169,12 +175,13 @@ int main(){
             case 2:
                 clear_display(&ssd);
                 clear_matrix();
-                solve_capacitated_vrp(&factory, objectives, distances, delivered, &sector);
+                solve_capacitated_vrp(&factory, objectives, distances, delivered, &sector, &ssd);
                 option_selected = 1;
                 break;
             case 3:
-                clear_display(&ssd);
-                clear_matrix();
+                about_display(&ssd);
+                option = 1;
+                option_selected = 0;
                 break;
             default:
                 break;

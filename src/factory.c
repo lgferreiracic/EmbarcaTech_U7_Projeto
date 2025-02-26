@@ -416,7 +416,7 @@ void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joyst
     sleep_ms(200);
 }
 
-void automatic_mode_movimentation(Robot* path, int path_length, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]) {
+void automatic_mode_movimentation(Robot* path, int path_length, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[], ssd1306_t *ssd){ 
     for (int i = 0; i < path_length; i++) {   
         factory->sectors[*sector][coordenates_to_index(factory->robot.position.x, factory->robot.position.y)] = 0;
         factory->robot.position.x = path[i].position.x;
@@ -427,13 +427,14 @@ void automatic_mode_movimentation(Robot* path, int path_length, Factory *factory
         show_delivarables(factory, *sector, delivered, objectives);
         show_destination(factory);
         draw_factory(factory, sector);
+        navigation_status(ssd, *sector, atual_capacity, get_missing_deliverables(factory));
         if(i < path_length - 1){
             sleep_ms(500);
         }
     }
 }
 
-void find_path(Robot goal, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]) {
+void find_path(Robot goal, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[], ssd1306_t *ssd) {
     Robot start = {factory->robot.sector, {factory->robot.position.x, factory->robot.position.y}};
     Robot *came_from = NULL;
     Robot *path = NULL;
@@ -441,7 +442,7 @@ void find_path(Robot goal, Factory *factory, uint8_t *sector, bool delivered[], 
 
     if (bfs(factory, start, goal, &came_from)) {
         reconstruct_path(came_from, start, goal, &path, &path_length);
-        automatic_mode_movimentation(path, path_length, factory, sector, delivered, objectives);
+        automatic_mode_movimentation(path, path_length, factory, sector, delivered, objectives, ssd);
     }else{
         printf("Caminho não encontrado\n");
     }
@@ -666,7 +667,7 @@ void show_delivarables(Factory *factory, uint8_t sector, bool delivered[], Robot
     }
 }
     
-void solve_capacitated_vrp(Factory *factory, Robot objectives[], int distances[], bool delivered[], uint8_t *sector) {
+void solve_capacitated_vrp(Factory *factory, Robot objectives[], int distances[], bool delivered[], uint8_t *sector, ssd1306_t *ssd) {
     int carried_loads = 0;
     Robot destination = {7, {4, 2}}; 
     while (1) {
@@ -675,23 +676,26 @@ void solve_capacitated_vrp(Factory *factory, Robot objectives[], int distances[]
             insertion_sort(distances, NUM_LOADS, delivered, objectives);
 
             if (!delivered[i]) {
-                find_path(objectives[i], factory, sector, delivered, objectives);
+                find_path(objectives[i], factory, sector, delivered, objectives, ssd);
                 play_success_sound();
                 delivered[i] = true;
                 carried_loads++;
+                atual_capacity = carried_loads;
             }
             if (carried_loads == LOAD_CAPACITY) {
-                find_path(destination, factory, sector, delivered, objectives);
+                find_path(destination, factory, sector, delivered, objectives, ssd);
                 play_delivery_sound();
                 carried_loads = 0;
+                atual_capacity = carried_loads;
             }
         }
         if(verify_delivered(delivered, NUM_LOADS)){
-            find_path(destination, factory, sector, delivered, objectives);
+            find_path(destination, factory, sector, delivered, objectives, ssd);
             play_delivery_sound();
             break;
         }
     }
+    atual_capacity = 0;
 }
 
 void reset_delivered(bool delivered[]) {

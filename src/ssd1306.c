@@ -199,22 +199,13 @@ void display_init(ssd1306_t *ssd){
   ssd1306_send_data(ssd);
 }
 
-void start_display(ssd1306_t *ssd){
-  ssd1306_fill(ssd, true); // Limpa o display
-  ssd1306_rect(ssd, 3, 3, 122, 58, false, true); // Desenha um retângulo
-  ssd1306_draw_string(ssd, "CEPEDI   TIC37", 8, 10); // Desenha uma string
-  ssd1306_draw_string(ssd, "Projeto U7", 20, 30); // Desenha uma string
-  ssd1306_draw_string(ssd, "Lucas Ferreira", 10, 48); // Desenha uma string      
-  ssd1306_send_data(ssd); // Atualiza o display
-}
-
 void option_1_selected(ssd1306_t *ssd){
   ssd1306_fill(ssd, true); // Limpa o display
   ssd1306_rect(ssd, 0, 0, 128, 64, false, true); // Desenha um retângulo
   ssd1306_draw_string(ssd, "Manual", 40, 10); // Desenha uma string
   ssd1306_rect(ssd, 3, 0, 122, 20, true, false); // Desenha um retângulo
   ssd1306_draw_string(ssd, "Automatico", 25, 30); // Desenha uma string
-  ssd1306_draw_string(ssd, "Instrucoes", 25, 48); // Desenha uma string      
+  ssd1306_draw_string(ssd, "Informacoes", 25, 48); // Desenha uma string      
   ssd1306_send_data(ssd); // Atualiza o display
 }
 
@@ -224,7 +215,7 @@ void option_2_selected(ssd1306_t *ssd){
   ssd1306_draw_string(ssd, "Manual", 40, 10); // Desenha uma string
   ssd1306_rect(ssd, 23, 0, 122, 20, true, false); // Desenha um retângulo
   ssd1306_draw_string(ssd, "Automatico", 25, 30); // Desenha uma string
-  ssd1306_draw_string(ssd, "Instrucoes", 25, 48); // Desenha uma string      
+  ssd1306_draw_string(ssd, "Informacoes", 25, 48); // Desenha uma string      
   ssd1306_send_data(ssd); // Atualiza o display
 }
 
@@ -234,7 +225,7 @@ void option_3_selected(ssd1306_t *ssd){
   ssd1306_draw_string(ssd, "Manual", 40, 10); // Desenha uma string
   ssd1306_rect(ssd, 43, 0, 122, 20, true, false); // Desenha um retângulo
   ssd1306_draw_string(ssd, "Automatico", 25, 30); // Desenha uma string
-  ssd1306_draw_string(ssd, "Instrucoes", 25, 48); // Desenha uma string      
+  ssd1306_draw_string(ssd, "Informacoes", 25, 48); // Desenha uma string      
   ssd1306_send_data(ssd); // Atualiza o display
 }
 
@@ -245,7 +236,7 @@ void navigation_status(ssd1306_t *ssd, uint8_t sector, int capacity, int missing
   sprintf(sector_str, "Setor %d", sector);
   ssd1306_draw_string(ssd, sector_str, 35, 10); // Desenha uma string
   char capacity_str[20];
-  sprintf(capacity_str, "Capacidade: %d", capacity);
+  sprintf(capacity_str, "Capacidade:%d/2", capacity);
   ssd1306_draw_string(ssd, capacity_str, 10, 30); // Desenha uma string
   char missing_str[20];
   sprintf(missing_str, "Faltando: %d", missing);
@@ -256,4 +247,46 @@ void navigation_status(ssd1306_t *ssd, uint8_t sector, int capacity, int missing
 void clear_display(ssd1306_t *ssd){
   ssd1306_fill(ssd, false); // Limpa o display
   ssd1306_send_data(ssd); // Atualiza o display
+}
+
+void about_display(ssd1306_t *ssd){
+  ssd1306_fill(ssd, true); // Limpa o display
+  ssd1306_rect(ssd, 3, 3, 122, 58, false, true); // Desenha um retângulo
+  ssd1306_draw_string(ssd, "CEPEDI   TIC37", 8, 10); // Desenha uma string
+  ssd1306_draw_string(ssd, "Projeto U7", 20, 30); // Desenha uma string
+  ssd1306_draw_string(ssd, "Lucas Ferreira", 10, 48); // Desenha uma string      
+  ssd1306_send_data(ssd); // Atualiza o display
+  sleep_ms(3000);
+  
+  ssd1306_fill(ssd, true);
+  ssd1306_rect(ssd, 3, 3, 122, 58, false, true);
+  ssd1306_draw_string(ssd, "Opcao 1:", 35, 10);
+  ssd1306_draw_string(ssd, "Movimentacao", 20, 30);
+  ssd1306_draw_string(ssd, "Manual", 40, 48);
+  ssd1306_send_data(ssd);
+  sleep_ms(3000);
+
+  ssd1306_fill(ssd, true); // Limpa o display
+  ssd1306_rect(ssd, 3, 3, 122, 58, false, true); // Desenha um retângulo
+  ssd1306_draw_string(ssd, "Utilize o", 25, 10); // Desenha uma string
+  ssd1306_draw_string(ssd, "joystick para", 10, 30); // Desenha uma string
+  ssd1306_draw_string(ssd, "movimentar", 25, 48); // Desenha uma string      
+  ssd1306_send_data(ssd); // Atualiza o display
+  sleep_ms(3000);
+
+  ssd1306_fill(ssd, true); // Limpa o display
+  ssd1306_rect(ssd, 3, 3, 122, 58, false, true); // Desenha um retângulo
+  ssd1306_draw_string(ssd, "Opcao 2:", 35, 10); // Desenha uma string
+  ssd1306_draw_string(ssd, "Movimentacao", 20, 30); // Desenha uma string
+  ssd1306_draw_string(ssd, "Automatica", 30, 48); // Desenha uma string      
+  ssd1306_send_data(ssd); // Atualiza o display
+  sleep_ms(3000);
+
+  ssd1306_fill(ssd, true); // Limpa o display
+  ssd1306_rect(ssd, 3, 3, 122, 58, false, true); // Desenha um retângulo
+  ssd1306_draw_string(ssd, "Simulando um", 10, 10); // Desenha uma string
+  ssd1306_draw_string(ssd, "AMR aplicado", 10, 30); // Desenha uma string
+  ssd1306_draw_string(ssd, "em logistica", 10, 48); // Desenha uma string      
+  ssd1306_send_data(ssd); // Atualiza o display
+  sleep_ms(3000);
 }

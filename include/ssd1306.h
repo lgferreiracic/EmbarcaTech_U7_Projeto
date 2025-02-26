@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
+#include "hardware/timer.h"
 #include <stdio.h>
 
 // Definição dos parâmetros do display OLED
@@ -55,7 +56,7 @@ void ssd1306_vline(ssd1306_t *ssd, uint8_t x, uint8_t y0, uint8_t y1, bool value
 void ssd1306_draw_char(ssd1306_t *ssd, char c, uint8_t x, uint8_t y);
 void ssd1306_draw_string(ssd1306_t *ssd, const char *str, uint8_t x, uint8_t y);
 void display_init(ssd1306_t *ssd);
-void start_display(ssd1306_t *ssd);
+void about_display(ssd1306_t *ssd);
 void clear_display(ssd1306_t *ssd);
 void option_1_selected(ssd1306_t *ssd);
 void option_2_selected(ssd1306_t *ssd);
