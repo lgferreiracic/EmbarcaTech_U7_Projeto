@@ -5,6 +5,7 @@
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
 #include "hardware/clocks.h"
+#include "include/led_rgb.h"
 
 #define BUZZER_A_PIN 10
 #define BUZZER_B_PIN 21
@@ -15,6 +16,7 @@ void set_buzzer_frequency(uint pin, uint frequency);
 void play_buzzer(uint pin, uint frequency, uint duration_ms);
 void play_denied_sound();
 void play_success_sound();
+void play_delivery_sound();
 
 // Frequências das notas musicais (em Hz)
 enum NotasMusicais {

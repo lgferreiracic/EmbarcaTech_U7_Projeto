@@ -40,14 +40,41 @@ void play_buzzer(uint pin, uint frequency, uint duration_ms) {
 
 // Função para tocar um som de negação
 void play_denied_sound(){
+    red();
     play_buzzer(BUZZER_A_PIN, MI, 100);
+    black();
     sleep_ms(50);
+    red();
     play_buzzer(BUZZER_A_PIN, MI, 100);
+    black();
 }
 
 // Função para tocar um som de sucesso
 void play_success_sound(){
+    green();
     play_buzzer(BUZZER_A_PIN, SOL, 100);
+    black();
     sleep_ms(50);
+    green();
     play_buzzer(BUZZER_A_PIN, SOL, 100);
+    black();
+}
+
+// Função para tocar uma música de inicialização
+void play_delivery_sound() {
+    yellow();
+    play_buzzer(BUZZER_A_PIN, DO, 150);
+    black();
+    sleep_ms(50);
+    yellow();
+    play_buzzer(BUZZER_A_PIN, RE, 150);
+    black();
+    sleep_ms(50);
+    yellow();
+    play_buzzer(BUZZER_A_PIN, MI, 150);
+    black();
+    sleep_ms(50);
+    yellow();
+    play_buzzer(BUZZER_A_PIN, SOL, 200);
+    black();
 }

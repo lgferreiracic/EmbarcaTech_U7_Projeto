@@ -4,6 +4,7 @@
 #include "include/matrix.h"
 #include "include/joystick.h"
 #include "include/buzzer.h"
+#include "include/ssd1306.h"
 #include <stdlib.h>
 
 #define NUM_SECTORS 9
@@ -51,7 +52,7 @@ void movimentation_in_sector_5(Factory *factory, uint8_t *sector, uint16_t joyst
 void movimentation_in_sector_6(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y);
 void movimentation_in_sector_7(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y);
 void movimentation_in_sector_8(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y);
-void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y);
+void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, ssd1306_t *ssd);
 void automatic_mode_movimentation(Robot* path, int path_length, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]);
 void find_path(Robot goal, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]);
 bool is_valid_position(int x, int y);

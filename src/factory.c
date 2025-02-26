@@ -330,9 +330,22 @@ void movimentation_in_sector_8(Factory *factory, uint8_t *sector, uint16_t joyst
     }
 }
 
-void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y){
+int get_missing_deliverables(Factory *factory){
+    int missing_deliverables = 0;
+    for(int i = 0; i < NUM_SECTORS; i++){
+        for(int j = 0; j < NUM_PIXELS; j++){
+            if(factory->sectors[i][j] == 3){
+                missing_deliverables++;
+            }
+        }
+    }
+    return missing_deliverables;
+}
+
+void manual_mode_movimentation(Factory *factory, uint8_t *sector, uint16_t joystick_x, uint16_t joystick_y, ssd1306_t *ssd){
     reading_joystick(&joystick_x, &joystick_y);
     draw_factory(factory, sector);
+    navigation_status(ssd, *sector, 2, get_missing_deliverables(factory));
 
     switch (factory->robot.sector){
         case 0:
@@ -381,7 +394,6 @@ void automatic_mode_movimentation(Robot* path, int path_length, Factory *factory
             sleep_ms(500);
         }
     }
-    play_success_sound();
 }
 
 void find_path(Robot goal, Factory *factory, uint8_t *sector, bool delivered[], Robot objectives[]) {
@@ -535,7 +547,7 @@ int manhattan_distance(Robot a, Robot b) {
 }
 
 void randomize_objectives(Robot objectives[], Factory *factory) {
-    srand(0);
+    srand(to_ms_since_boot(get_absolute_time()));
     // Posições permitidas para alocação dos objetivos
     int valid_positions[] = {12};
     int num_valid_positions = sizeof(valid_positions) / sizeof(valid_positions[0]);
@@ -627,16 +639,19 @@ void solve_capacitated_vrp(Factory *factory, Robot objectives[], int distances[]
 
             if (!delivered[i]) {
                 find_path(objectives[i], factory, sector, delivered, objectives);
+                play_success_sound();
                 delivered[i] = true;
                 carried_loads++;
             }
             if (carried_loads == LOAD_CAPACITY) {
                 find_path(destination, factory, sector, delivered, objectives);
+                play_delivery_sound();
                 carried_loads = 0;
             }
         }
         if(verify_delivered(delivered, NUM_LOADS)){
             find_path(destination, factory, sector, delivered, objectives);
+            play_delivery_sound();
             break;
         }
     }

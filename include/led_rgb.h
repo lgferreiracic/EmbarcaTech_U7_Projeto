@@ -12,5 +12,13 @@
 
 void led_init(uint led_pin);
 void led_init_all();
+void red();
+void green();
+void blue();
+void yellow();
+void cyan();
+void magenta();
+void white();
+void black();
 
 #endif

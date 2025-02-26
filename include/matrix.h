@@ -35,7 +35,7 @@ void set_leds(PIO pio, uint sm, double r, double g, double b);
 int getIndex(int x, int y);
 void getCoordinates(int index, int *x, int *y);
 void desenho_pio(RGB pixels[NUM_PIXELS], PIO pio, uint sm);
-void play_animation_0();
 uint coordenates_to_index(int x, int y);
+void clear_matrix();
 
 #endif

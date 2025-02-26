@@ -70,57 +70,10 @@ void desenho_pio(RGB pixels[NUM_PIXELS], PIO pio, uint sm) {
     }
 }
 
-// Função para reproduzir a animação 0, que é um coração pulsante
-void play_animation_0() {
-    
-    RGB frame1[NUM_PIXELS] = {
-        BLACK, RED, BLACK, RED, BLACK,
-        RED, RED, RED, RED, RED,
-        RED, RED, RED, RED, RED,
-        BLACK, RED, RED, RED, BLACK,
-        BLACK, BLACK, RED, BLACK, BLACK
-    };
-
-    RGB frame2[NUM_PIXELS] = {
-        BLACK, MAGENTA, BLACK, MAGENTA, BLACK,
-        MAGENTA, RED, RED, RED, MAGENTA,
-        MAGENTA, RED, RED, RED, MAGENTA,
-        BLACK, RED, RED, RED, BLACK,
-        BLACK, BLACK, MAGENTA, BLACK, BLACK
-    };
-
-    RGB frame3[NUM_PIXELS] = {
-        BLACK, MAGENTA, BLACK, MAGENTA, BLACK,
-        MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA,
-        MAGENTA, MAGENTA, RED, MAGENTA, MAGENTA,
-        BLACK, MAGENTA, MAGENTA, MAGENTA, BLACK,
-        BLACK, BLACK, MAGENTA, BLACK, BLACK
-    };
-       
-    RGB frame4[NUM_PIXELS] = {
-        BLACK, MAGENTA, BLACK, MAGENTA, BLACK,
-        MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA,
-        MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA,
-        BLACK, MAGENTA, MAGENTA, MAGENTA, BLACK,
-        BLACK, BLACK, MAGENTA, BLACK, BLACK
-    };
-
-    RGB frame5[NUM_PIXELS] = {
-        BLACK, RED, BLACK, RED, BLACK,
-        RED, RED, RED, RED, RED,
-        RED, RED, RED, RED, RED,
-        BLACK, RED, RED, RED, BLACK,
-        BLACK, BLACK, RED, BLACK, BLACK
-    };
-    
-    RGB *frames[5] = {frame1, frame2, frame3, frame4, frame5};
-
-    for(int i = 0; i < 5; i++){
-        for (int i = 0; i < 5; i++) {
-            desenho_pio(frames[i], pio, sm);
-            sleep_ms(FRAME_DELAY);
-        }
+void clear_matrix(){
+    RGB pixels[NUM_PIXELS];
+    for (int i = 0; i < NUM_PIXELS; i++) {
+        pixels[i] = BLACK;
     }
-    set_leds(pio, sm, 0, 0, 0); // Desliga todos os LEDs
+    desenho_pio(pixels, pio0, 0);
 }
-
