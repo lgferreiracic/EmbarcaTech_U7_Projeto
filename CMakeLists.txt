@@ -33,16 +33,20 @@ project(EmbarcaTech_U7_Projeto C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+file(GLOB LIBSOURCES "src/*.c")
+
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(EmbarcaTech_U7_Projeto EmbarcaTech_U7_Projeto.c )
+add_executable(EmbarcaTech_U7_Projeto EmbarcaTech_U7_Projeto.c ${LIBSOURCES})
 
 pico_set_program_name(EmbarcaTech_U7_Projeto "EmbarcaTech_U7_Projeto")
 pico_set_program_version(EmbarcaTech_U7_Projeto "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(EmbarcaTech_U7_Projeto 0)
-pico_enable_stdio_usb(EmbarcaTech_U7_Projeto 0)
+pico_enable_stdio_usb(EmbarcaTech_U7_Projeto 1)
+
+pico_generate_pio_header(EmbarcaTech_U7_Projeto ${CMAKE_CURRENT_LIST_DIR}/include/ws2812.pio)
 
 # Add the standard library to the build
 target_link_libraries(EmbarcaTech_U7_Projeto
@@ -54,8 +58,16 @@ target_include_directories(EmbarcaTech_U7_Projeto PRIVATE
 )
 
 # Add any user requested libraries
-target_link_libraries(EmbarcaTech_U7_Projeto 
-        
+target_link_libraries(EmbarcaTech_U7_Projeto
+            pico_time
+            hardware_i2c
+            hardware_adc
+            hardware_pwm
+            hardware_timer
+            hardware_gpio
+            hardware_pio
+            hardware_clocks
+            hardware_uart
         )
 
 pico_add_extra_outputs(EmbarcaTech_U7_Projeto)
