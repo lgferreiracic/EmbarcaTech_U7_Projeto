@@ -22,6 +22,7 @@ Esse projeto é uma aplicação prática de conceitos de automação e robótica
 - **Microcontrolador Raspberry Pi Pico W (RP2040)**: Responsável pelo controle dos pinos GPIO.
 - **LED RGB**: Com os pinos conectados às GPIOs 11, 12 e 13.
 - **Botão A**: Conectado à GPIO 5.
+- **Botão B**: Conectado à GPIO 6
 - **Botão do Joystick**: Conectado à GPIO 22.
 - **Display SSD1306**: Conectado via I2C nas GPIOs 14 e 15.
 - **Matriz de LEDs WS2812B**: Conectada à GPIO 7.
